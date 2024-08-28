@@ -1,0 +1,245 @@
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Mono:wght@400;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: rgba(255, 255, 255, 0.9);
+  min-height: 100vh;
+  background-color: #141414;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Space Mono", monospace;
+}
+
+main {
+  width: min(90vw, 720px);
+  /* background-color: azure; */
+  padding: 2rem;
+  display: flex;
+  row-gap: 20px;
+  flex-direction: column;
+}
+
+main h1 {
+  font-size: min(1.5rem, 40px);
+  text-transform: uppercase;
+  letter-spacing: min(0.3rem, 10px);
+  text-align: center;
+}
+
+.label {
+  padding: 5px;
+}
+
+.generated-pass {
+  display: flex;
+  background-color: #1c1c1c;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  align-items: center;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+.generated-pass h2 {
+  color: white;
+  font-family: "Share Tech Mono", monospace;
+  font-weight: 300;
+}
+
+.copy-icon::after {
+  content: "\f0c5";
+  font-size: 30px;
+  color: white;
+  font-family: "Font Awesome 5 free";
+}
+
+.copy-icon:hover {
+  scale: 1.08;
+}
+
+.range {
+  -webkit-appearance: none;
+  width: 90%;
+  background: #ffffff3f;
+  height: 4px;
+  overflow: hidden;
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #7033f5;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: -407px 0px 0px 400px #7033f5;
+  border: 5px solid #fbfbfb;
+}
+
+.character-length-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1c1c1c;
+  padding: 15px;
+  border-radius: 3px;
+}
+
+.settingsBox {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 0px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.tile {
+  position: relative;
+  min-width: 120px;
+  height: 150px;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: #1c1c1c;
+  border-radius: 10px;
+  border: 3px solid transparent;
+  outline: none;
+  box-shadow: 15px 15px 25px solid rgba(2, 28, 53, 0.05);
+  cursor: pointer;
+}
+
+input[type="checkbox"]::after {
+  position: absolute;
+  font-family: "Font Awesome 5 free";
+  font-weight: 400;
+  content: "\f111";
+  font-size: 22px;
+  top: 10px;
+  left: 10px;
+  color: #e2e6f3;
+}
+
+input[type="checkbox"]:hover {
+  transform: scale(1.08);
+}
+
+input[type="checkbox"]:checked {
+  border: 3px solid #7033f5;
+}
+
+input[type="checkbox"]:checked:after {
+  font-weight: 900;
+  content: "\f058";
+  color: #7033f5;
+}
+
+.tile label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  height: 80%;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+}
+
+.tile label .fas {
+  font-size: 40px;
+  color: #fbfbfb;
+}
+
+input[type="checkbox"]:checked + label .fas {
+  animation: grow 0.5s;
+}
+
+@keyframes grow {
+  50% {
+    font-size: 50px;
+  }
+}
+
+.tile label h6 {
+  color: #fbfbfb;
+  text-align: center;
+}
+
+.row-5 button {
+  width: 100%;
+  padding: 10px;
+  font-size: 1.3rem;
+  font-family: "Space Mono", monospace;
+  background-color: #7033f5;
+  color: #fbfbfb;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 3px solid #7033f5;
+  border-radius: 3px;
+}
+
+.row-5 button:hover {
+  background-color: #1c1c1c;
+  border: 3px solid #fbfbfb;
+}
+
+/* Toast CSS */
+
+#toast {
+  visibility: hidden;
+  height: 40px;
+  width: fit-content;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #7033f5;
+  color: #fff;
+  font-weight: 600;
+  font-size: 10px;
+  border-radius: 3px;
+  text-align: center;
+  padding: 0px 20px;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#toast.show {
+  visibility: visible;
+  animation: fadein 1s, fadeout 1s 3s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
