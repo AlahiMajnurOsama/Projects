@@ -1,35 +1,19 @@
+
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Password Generator by Alahi Majnur Osama">
-    <meta name="keywords" content="Password Generator">
-    <meta name="author" content="Alahi Majnur Osama">
-    <title>Password Generator</title>
-</head>
-<body>
-    <iframe src="https://api.gptcall.net/uploads/60ac08796cb1b1a8810a8a11cd291ebe/index.html" width="100%" height="790px" frameborder="0" style="border: 0;"></iframe>
-    <br>
+<html>
+    <head>
+        <title>Password Generator</title>
 
-    <script>
-        // Listen for messages from the iframe
-        window.addEventListener('message', (event) => {
-            if (event.data && event.data.action === 'copyToClipboard') {
-                const textToCopy = event.data.text;
-                copyToClipboard(textToCopy);
-            }
-        });
+        <base href="https://app.bgcgeeks.tech/">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-        // Function to copy text to clipboard
-        function copyToClipboard(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-        }
-    </script>
-</body>
+                    <link href="https://app.bgcgeeks.tech/uploads/favicons/6566a15f34e7558abacdf32386f9c734.jpg" rel="shortcut icon" />
+            </head>
+
+    <body>
+                    <iframe id="iframe" src="https://api.gptcall.net/uploads/60ac08796cb1b1a8810a8a11cd291ebe/index.html" style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index: 1;"></iframe>
+        
+        
+            </body>
 </html>
