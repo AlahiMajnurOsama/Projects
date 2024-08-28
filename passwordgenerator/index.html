@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Software Geeks">
+    <meta name="description" content="Password Generator by Alahi Majnur Osama">
     <meta name="keywords" content="Password Generator">
     <meta name="author" content="Alahi Majnur Osama">
     <title>Password Generator</title>
@@ -11,5 +11,25 @@
 <body>
     <iframe src="https://api.gptcall.net/uploads/60ac08796cb1b1a8810a8a11cd291ebe/index.html" width="100%" height="790px" frameborder="0" style="border: 0;"></iframe>
     <br>
+
+    <script>
+        // Listen for messages from the iframe
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.action === 'copyToClipboard') {
+                const textToCopy = event.data.text;
+                copyToClipboard(textToCopy);
+            }
+        });
+
+        // Function to copy text to clipboard
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+    </script>
 </body>
 </html>
