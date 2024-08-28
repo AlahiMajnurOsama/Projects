@@ -1,0 +1,117 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-800 transition duration-500">
+    <div id="app" class="flex flex-col items-center justify-center min-h-screen p-4">
+        <div class="flex justify-between w-full max-w-3xl mb-4">
+            <h1 class="text-3xl font-bold">Password Generator</h1>
+        </div>
+        <div class="bg-white dark:bg-gray-700 shadow-lg rounded-lg p-6 transition duration-500 w-full">
+            <div class="mb-4">
+                <p class="label">Generated Password</p>
+                <div class="flex items-center bg-gray-200 dark:bg-gray-600 p-2 rounded overflow-hidden">
+                    <h2 class="text-xl flex-grow break-all" id="showPassword">{{ password }}</h2>
+                    <button @click="copyPassword" class="text-blue-500">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mb-4">
+                <p class="label">Custom Word (optional)</p>
+                <input type="text" v-model="customWord" placeholder="Enter custom word" class="input input-bordered w-full" />
+            </div>
+            <div class="mb-4">
+                <p class="label">Character length</p>
+                <input type="range" min="4" max="100" v-model="lengthValue" class="range range-primary" />
+                <span>{{ lengthValue }}</span>
+            </div>
+            <div class="mb-4">
+                <p class="label">Settings</p>
+                <div class="flex flex-col">
+                    <label class="flex items-center">
+                        <input type="checkbox" v-model="includeUppercase" class="mr-2" />
+                        <span><i class="fa-solid fa-a"></i> Uppercase</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" v-model="includeNumbers" class="mr-2" />
+                        <span><i class="fa-regular fa-1"></i> Numbers</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" v-model="includeSymbols" class="mr-2" />
+                        <span><i class="fa-solid fa-hashtag"></i> Symbols</span>
+                    </label>
+                </div>
+            </div>
+            <button @click="generatePassword" class="btn btn-primary w-full">Generate</button>
+        </div>
+        <div id="toast" class="fixed bottom-4 right-4 p-4 bg-green-500 text-white rounded hidden">
+            Text copied to clipboard
+        </div>
+        <footer class="mt-8 text-center text-gray-600 dark:text-gray-300">
+            <p>Created by Alahi Majnur Osama</p>
+        </footer>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                password: '',
+                lengthValue: 10,
+                includeUppercase: false,
+                includeNumbers: false,
+                includeSymbols: false,
+                customWord: ''
+            },
+            methods: {
+                generatePassword() {
+                    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+                    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    const numbers = '0123456789';
+                    const symbols = '!@#$%^&*()_+[]{}|;:",.<>?';
+                    let characterSet = lowercase;
+                    if (this.includeUppercase) characterSet += uppercase;
+                    if (this.includeNumbers) characterSet += numbers;
+                    if (this.includeSymbols) characterSet += symbols;
+
+                    this.password = '';
+                    let randomLength = this.lengthValue;
+                    if (this.customWord) {
+                        randomLength -= this.customWord.length;
+                    }
+                    for (let i = 0; i < randomLength; i++) {
+                        const randomIndex = Math.floor(Math.random() * characterSet.length);
+                        this.password += characterSet[randomIndex];
+                    }
+                    if (this.customWord) {
+                        const randomPosition = Math.floor(Math.random() * (this.password.length + 1));
+                        const passwordArray = this.password.split('');
+                        passwordArray.splice(randomPosition, 0, this.customWord);
+                        this.password = passwordArray.join('');
+                    }
+                },
+                copyPassword() {
+                    navigator.clipboard.writeText(this.password).then(() => {
+                        const toast = document.getElementById('toast');
+                        toast.classList.remove('hidden');
+                        setTimeout(() => {
+                            toast.classList.add('hidden');
+                        }, 2000);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
