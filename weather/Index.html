@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://api.gptcall.net/errorsForward.js"></script>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(90deg, #6e8efb, #a777e3);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+            font-family: 'Roboto', sans-serif;
+            position: relative;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 50% 0%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 50% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #1e90ff;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.4s, transform 0.2s;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            margin: 5px;
+            width: 48%;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background: #1c86ee;
+        }
+
+        h1 {
+            color: black;
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .welcome-dialog {
+            display: none;
+            position: fixed;
+            inset: 0;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+        }
+
+        .welcome-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-content img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            color: white;
+            text-align: center;
+            font-size: 0.8rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .btn {
+                width: auto;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Weather Update</h1>
+        <div class="glassmorphism flex flex-col items-center">
+            <input type="text" id="cityInput" placeholder="Enter City" class="p-3 rounded-lg mb-4 border-2 border-gray-300 focus:border-purple-500 transition" />
+            <button id="getWeather" class="btn">Get Weather</button>
+            <button id="findMyWeather" class="btn mt-2">Find My Weather</button>
+        </div>
+        <div id="weatherResult" class="glassmorphism p-6 weather-info text-lg"></div>
+    </div>
+
+    <div id="welcomeDialog" class="welcome-dialog">
+        <div class="welcome-content">
+            <img src="https://lh3.googleusercontent.com/pw/AP1GczPbmmP8La6_5Oy-QV63ULxTmVvCeybxiU-QBLv_VSvKQIuhiIYe8CGHi6DDFt7V3sjcW2sQifZF7-JT_BiGPsjJKN2wmG0pkGaSvDXA4iJkEq8jehsbPSX0lwF2v2fW4r5wKgHWIOuCtP_2KPNqdqs8=w1080-h1080-s-no-gm?authuser=0" alt="Alahi Majnur Osama" />
+            <h2 class="text-xl font-bold mb-4 text-black">Assalamualaikum,<br />I'm Alahi Majnur Osama.</h2>
+            <p class="mb-4 text-black">Welcome to my Weather App. Hope you like it! For suggestions or features, please let me know. Have a nice day!</p>
+            <div class="flex justify-center w-full">
+                <button id="thanksButton" class="btn">Thanks</button>
+                <button id="contactButton" class="btn">Contact</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>Created by Alahi Majnur Osama</footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const welcomeDialog = document.getElementById('welcomeDialog');
+            welcomeDialog.style.display = 'flex';
+
+            document.getElementById('thanksButton').addEventListener('click', function() {
+                welcomeDialog.style.display = 'none';
+            });
+
+            document.getElementById('contactButton').addEventListener('click', function() {
+                window.location.href = "https://bio.link/alahimajnurosama";
+            });
+        });
+
+        document.getElementById('getWeather').addEventListener('click', function() {
+            const city = document.getElementById('cityInput').value;
+            fetchWeather(city);
+        });
+
+        document.getElementById('findMyWeather').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    fetchWeatherByLocation(lat, lon);
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        function fetchWeather(city) {
+            fetch(`https://api.weatherapi.com/v1/current.json?key=2e496852627641b0a37123040212608&q=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                })
+                .catch(err => console.error(err));
+        }
+
+        function fetchWeatherByLocation(lat, lon) {
+            fetch(`https://api.weatherapi.com/v1/current.json?key=2e496852627641b0a37123040212608&q=${lat},${lon}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                })
+                .catch(err => console.error(err));
+        }
+
+        function displayWeather(data) {
+            const resultDiv = document.getElementById('weatherResult');
+            if (data.location) {
+                const name = data.location.name;
+                const country = data.location.country;
+                const localtime = data.location.localtime;
+                const tempC = data.current.temp_c;
+                const tempF = data.current.temp_f;
+                const condition = data.current.condition.text;
+                const windSpeed = data.current.wind_kph;
+                const pressure = data.current.pressure_mb;
+                const icon = data.current.condition.icon;
+                const isDay = data.current.is_day;
+                const timeOfDayIcon = isDay ? '🌞' : '🌙';
+                let temp = tempC;
+                let unit = '°C';
+                let additionalInfoVisible = false;
+
+                resultDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="header-icon">${timeOfDayIcon}</span>
+                        <div class="ml-3 text-left text-black">
+                            <p class="text-lg font-semibold">${name}, ${country}</p>
+                            <p class="text-sm">${localtime}</p>
+                            <p class="cursor-pointer text-3xl" onclick="toggleTemp()">${temp} ${unit}</p>
+                            <p class="text-md">${condition} <img src="${icon}" alt="Weather Icon" class="inline-block" /></p>
+                            <button id="showMore" class="btn toggle-btn">Show Details</button>
+                        </div>
+                    </div>
+                `;
+
+                const showMoreButton = document.getElementById('showMore');
+                showMoreButton.addEventListener('click', () => {
+                    if (!additionalInfoVisible) {
+                        resultDiv.innerHTML += `
+                            <div class="mt-4 text-black">
+                                <p>Wind Speed: ${windSpeed} kph</p>
+                                <p>Pressure: ${pressure} mb</p>
+                            </div>
+                        `;
+                        additionalInfoVisible = true;
+                        showMoreButton.innerText = 'Hide Details';
+                    } else {
+                        const details = resultDiv.querySelectorAll('div.mt-4');
+                        details.forEach(detail => detail.remove());
+                        additionalInfoVisible = false;
+                        showMoreButton.innerText = 'Show Details';
+                    }
+                });
+
+                window.toggleTemp = function() {
+                    if (unit === '°C') {
+                        temp = tempF;
+                        unit = '°F';
+                    } else {
+                        temp = tempC;
+                        unit = '°C';
+                    }
+                    resultDiv.querySelector('.cursor-pointer').innerText = `${temp} ${unit}`;
+                };
+            } else {
+                resultDiv.innerHTML = "<p class='text-red-500'>Error: City not found.</p>";
+            }
+        }
+    </script>
+</body>
+
+</html>
