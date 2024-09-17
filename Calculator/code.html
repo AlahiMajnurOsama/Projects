@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://api.gptcall.net/errorsForward.js"></script>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator in HTML, CSS & JavaScript</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-image: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_Fxs3gMyzQ5Vrddc5lCC6aIm0dfU8TU4AA16P6QaO7NbQbNiEn-maupPT0iioLIf87m95k4updzj_2MVa501-Mad9LjrkSrGYhLx392y7lYWsCUeXP9d-xjfI5XN2ZgidSylJR-GeWMxu892CaIp71aD5KS4Q0rVIiH0EJm37ePpCMyB96YCVUFq1/s1253/%E0%A6%B8%E0%A7%81%E0%A6%A8%E0%A7%8D%E0%A6%A6%E0%A6%B0-%E0%A6%B8%E0%A7%81%E0%A6%A8%E0%A7%8D%E0%A6%A6%E0%A6%B0-%E0%A6%AA%E0%A6%BF%E0%A6%95-%E0%A6%A6%E0%A7%87%E0%A6%96%E0%A6%BE%E0%A6%A8%20(2).jpg");
+        background-size: cover;
+        backdrop-filter: blur(10px);
+      }
+      .container {
+        position: relative;
+        max-width: 350px;
+        width: 100%;
+        border-radius: 12px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      }
+      .display {
+        height: 80px;
+        width: 100%;
+        outline: none;
+        border: none;
+        text-align: right;
+        margin-bottom: 10px;
+        font-size: 25px;
+        color: #000000;
+        pointer-events: none;
+        border-radius: 6px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.3);
+        box-shadow: inset 0 1px 5px rgba(255, 255, 255, 0.3);
+      }
+      .buttons {
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .buttons button {
+        padding: 15px;
+        border-radius: 6px;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.3);
+        transition: background-color 0.3s, transform 0.2s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        color: #000;
+      }
+      .buttons button:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+      .buttons button:active {
+        transform: scale(0.95);
+      }
+      .operator {
+        background-color: rgba(209, 231, 255, 0.9);
+        color: #0d6efd;
+      }
+      .operator:hover {
+        background-color: rgba(173, 225, 255, 1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input type="text" class="display" readonly />
+      <div class="buttons">
+        <button class="operator" data-value="AC">AC</button>
+        <button class="operator" data-value="DEL">DEL</button>
+        <button class="operator" data-value="%">%</button>
+        <button class="operator" data-value="/">/</button>
+        <button data-value="7">7</button>
+        <button data-value="8">8</button>
+        <button data-value="9">9</button>
+        <button class="operator" data-value="*">*</button>
+        <button data-value="4">4</button>
+        <button data-value="5">5</button>
+        <button data-value="6">6</button>
+        <button class="operator" data-value="-">-</button>
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3">3</button>
+        <button class="operator" data-value="+">+</button>
+        <button data-value="0">0</button>
+        <button data-value="00">00</button>
+        <button data-value=".">.</button>
+        <button class="operator" data-value="=">=</button>
+      </div>
+    </div>
+    <script>
+      const display = document.querySelector(".display");
+      const buttons = document.querySelectorAll("button");
+      const specialChars = ["%", "*", "/", "-", "+", "="];
+      let output = "";
+
+      const calculate = (btnValue) => {
+        if (btnValue === "=" && output !== "") {
+          output = eval(output.replace("%", "/100"));
+        } else if (btnValue === "AC") {
+          output = "";
+        } else if (btnValue === "DEL") {
+          output = output.toString().slice(0, -1);
+        } else {
+          if (output === "" && specialChars.includes(btnValue)) return;
+          output += btnValue;
+        }
+        display.value = output;
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", (e) => calculate(e.target.dataset.value));
+      });
+    </script>
+  </body>
+</html>
