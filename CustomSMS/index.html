@@ -1,0 +1,147 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://api.gptcall.net/errorsForward.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.14.0/dist/full.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.6.8/firebase-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.6.8/firebase-auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <title>Custom SMS Sender</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            animation: bgAnimation 10s ease infinite alternate;
+        }
+        @keyframes bgAnimation {
+            0% {
+                background: linear-gradient(to right, #ff7e5f, #feb47b);
+            }
+            100% {
+                background: linear-gradient(to right, #86acf9, #e0a4f2);
+            }
+        }
+        .glass-effect {
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen flex-col">
+    <div class="glass-effect rounded-lg p-8 shadow-lg w-full max-w-md mb-10">
+        <h1 class="text-3xl font-bold text-center text-gray-900 mb-6">Send Custom SMS</h1>
+        <select id="apiSelector" class="select select-bordered w-full mb-4">
+            <option value="badhan-api">Badhan API</option>
+            <option value="hishab-express">Hishab Express</option>
+            <option value="robi">Robi API</option>
+        </select>
+        <input id="phoneNumber" type="text" placeholder="Phone Number" class="input input-bordered w-full mb-4" />
+        <textarea id="message" placeholder="Your Message" class="textarea textarea-bordered w-full mb-4"></textarea>
+        <button id="sendBtn" class="btn btn-primary w-full">Send SMS</button>
+        <div id="response" class="mt-4 text-gray-900"></div>
+    </div>
+    <footer class="text-center text-gray-900 mt-4">
+        <p>Created by Alahi Majnur Osama</p>
+    </footer>
+    <script>
+        document.getElementById('sendBtn').addEventListener('click', function () {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const message = encodeURIComponent(document.getElementById('message').value);
+            const apiSelection = document.getElementById('apiSelector').value;
+
+            if (apiSelection === 'badhan-api') {
+                const url = "https://badhan-api.stylezworld.net/api/otp/store";
+                const headers = {
+                    "user-agent": "Dart/3.1 (dart:io)",
+                    "accept": "application/json",
+                    "content-type": "application/json; charset=utf-8",
+                    "app-access-token": "mWR+64IbKwxM2XCyJbMvUSCcc="
+                };
+                const data = {
+                    phone_number: phoneNumber,
+                    registration_phone_number: phoneNumber,
+                    auto_fill: message
+                };
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerHTML = JSON.stringify(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else if (apiSelection === 'hishab-express') {
+                const url = "https://api.hishabexpress.com/send-sms";
+                const headers = {
+                    "Content-Type": "application/json"
+                };
+                const data = {
+                    phone: phoneNumber,
+                    message: message
+                };
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerHTML = JSON.stringify(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else if (apiSelection === 'robi') {
+                const url = 'https://scs.robi.com.bd/api/send-otp';
+                const headers = {
+                    'User-Agent': 'okhttp/3.12.0',
+                    'Connection': 'Keep-Alive',
+                    'Accept': 'application/json',
+                    'Accept-Encoding': 'gzip',
+                    'Content-Type': 'multipart/form-data',
+                    'App-Env': 'stage',
+                    'Sms-Hash-Key': '3LtW7kkzMXS',
+                    'DeviceId': '95cdc0814c3178b0',
+                    'Device': '1',
+                    'AppVersionCode': '17',
+                    'Accept-Language': 'en',
+                    'OS-Version': '11',
+                    'Device-Info': 'realme-RMX3171',
+                    'MacAddress': 'NO MACADDRESS',
+                    'Imei': 'NO IMEI',
+                    'Authorization': 'Bearer'
+                };
+                const params = new URLSearchParams({
+                    mobile_no: phoneNumber,
+                });
+                fetch(url + '?' + params.toString(), {
+                    method: 'GET',
+                    headers: headers,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerHTML = JSON.stringify(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+```
