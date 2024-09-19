@@ -1,11 +1,10 @@
-# index.html
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacker Matrix Interface</title>
+    <title>Number Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
@@ -35,11 +34,11 @@
     <div id="app" class="flex items-center justify-center h-screen relative">
         <div class="glass p-8 w-96 text-center" v-show="!user">
             <img src="https://lh3.googleusercontent.com/pw/AP1GczPqpFqzGiEQhuZZY_-3SHo7XoXiXl89ek2Yc2n_kNAK-PXEYBLCrxHkr73BoFPcCsStnlmFNJseL9lM8V3kolOlPY-AV9u0Ditwb2llRTa0HB6-bhLevofwmRGTf5B1yPdpr23uH_gl72bFqYpa8jkr=w1080-h1080-s-no-gm?authuser=0" alt="Admin" class="rounded-full w-24 h-24 mb-4 mx-auto" />
-            <h2 class="text-xl font-semibold mb-4">Welcome, Admin</h2>
+            <h2 class="text-xl font-semibold mb-4">Welcome, User</h2>
             <button @click="user = true" class="btn btn-primary w-full mb-2">Enter</button>
         </div>
         <div class="glass p-8 w-96 text-center" v-show="user && !selectedOperator">
-            <h2 class="text-xl font-semibold mb-4">Balance Checker</h2>
+            <h2 class="text-xl font-semibold mb-4">Sim Tools</h2>
             <button @click="selectOperator('banglalink')" class="btn btn-warning w-full mb-2">BL Loan Checker</button>
             <button @click="selectOperator('gp')" class="btn btn-warning w-full mb-2">GP Balance Checker</button>
         </div>
@@ -107,4 +106,3 @@
     </script>
 </body>
 </html>
-```
