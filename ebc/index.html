@@ -1,4 +1,5 @@
-
+# index.html
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,10 +23,16 @@
             border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        .response {
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <div id="app" class="flex items-center justify-center h-screen">
+    <div id="app" class="flex items-center justify-center h-screen relative">
         <div class="glass p-8 w-96 text-center" v-show="!user">
             <img src="https://lh3.googleusercontent.com/pw/AP1GczPqpFqzGiEQhuZZY_-3SHo7XoXiXl89ek2Yc2n_kNAK-PXEYBLCrxHkr73BoFPcCsStnlmFNJseL9lM8V3kolOlPY-AV9u0Ditwb2llRTa0HB6-bhLevofwmRGTf5B1yPdpr23uH_gl72bFqYpa8jkr=w1080-h1080-s-no-gm?authuser=0" alt="Admin" class="rounded-full w-24 h-24 mb-4 mx-auto" />
             <h2 class="text-xl font-semibold mb-4">Welcome, Admin</h2>
@@ -41,11 +48,13 @@
             <input v-model="phoneNumber" type="text" placeholder="BD Phone Number" class="input input-bordered mb-4 w-full" />
             <button @click="checkBalance" class="btn btn-success w-full mb-2">Check Balance</button>
             <button @click="backToMenu" class="btn btn-error w-full">Back</button>
-            <p v-if="balanceMessage" class="text-lg mt-4">{{ balanceMessage }}</p>
+            <div class="response" v-for="(message, index) in balanceMessages" :key="index">
+                <p>{{ message }}</p>
+            </div>
         </div>
     </div>
     <div class="glass p-4 text-center fixed bottom-0 left-0 right-0">
-        <p class="text-sm">Created by Owner_Of_DCS</p>
+        <p class="text-sm">Created by Alahi Majnur Osama</p>
     </div>
     <script>
         new Vue({
@@ -54,7 +63,7 @@
                 user: false,
                 phoneNumber: '',
                 selectedOperator: null,
-                balanceMessage: ''
+                balanceMessages: []
             },
             methods: {
                 selectOperator(operator) {
@@ -63,9 +72,12 @@
                 backToMenu() {
                     this.selectedOperator = null;
                     this.phoneNumber = '';
-                    this.balanceMessage = '';
+                    this.balanceMessages = [];
                 },
                 checkBalance() {
+                    if (!this.phoneNumber) {
+                        return;
+                    }
                     const apiUrl = this.selectedOperator === 'banglalink' 
                         ? `https://myblapi.banglalink.net/api/v1/emergency-balance/${this.phoneNumber}` 
                         : `https://publicx.top/GP/BALANCE_INFO/PUBLIC_APPS/check_balance.php?msisdn=${this.phoneNumber}`;
@@ -76,18 +88,18 @@
                             if (this.selectedOperator === 'banglalink') {
                                 if (data.status === "SUCCESS") {
                                     const dueLoan = data.data.due_loan;
-                                    this.balanceMessage = dueLoan > 0 ? `Your Number ${this.phoneNumber} has balance of ${dueLoan} Taka.` : "No outstanding balance.";
+                                    this.balanceMessages.push(dueLoan > 0 ? `Your Number ${this.phoneNumber} has balance of ${dueLoan} Taka.` : "No outstanding balance.");
                                 } else if (data.status === "FAIL" && data.status_code === 404) {
-                                    this.balanceMessage = "This is not a valid Banglalink number.";
+                                    this.balanceMessages.push("This is not a valid Banglalink number.");
                                 } else {
-                                    this.balanceMessage = "No outstanding balance.";
+                                    this.balanceMessages.push("No outstanding balance.");
                                 }
                             } else {
-                                this.balanceMessage = `Your Number ${data.msisdn} has balance of ${data.accountBalance} Taka. And your Plan is ${data.ratePlan}.`;
+                                this.balanceMessages.push(`Your Number ${data.msisdn} has balance of ${data.accountBalance} Taka. And your Plan is ${data.ratePlan}.`);
                             }
                         })
                         .catch(error => {
-                            this.balanceMessage = "Error retrieving balance.";
+                            this.balanceMessages.push("Error retrieving balance.");
                         });
                 }
             }
@@ -95,3 +107,4 @@
     </script>
 </body>
 </html>
+```
