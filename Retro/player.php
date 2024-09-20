@@ -1,74 +1,61 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player - Retro IPTV</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>IPTV Player</title>
+    <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <style>
         body {
-            background-color: black;
+            font-family: Poppins, sans-serif;
+            background: #000;
             color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
-        .player-container {
-            padding: 20px;
-            text-align: center;
-        }
-        .loading-indicator {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid #3b82f6;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        #videoContainer {
+            width: 100%;
+            height: 80vh;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="app" class="player-container">
-        <h1 class="text-2xl font-bold">Playing Channel</h1>
-        <div v-if="loading" class="flex items-center justify-center my-4">
-            <div class="loading-indicator"></div>
-        </div>
-        <video id="video" controls v-if="!loading" class="w-full h-auto"></video>
-    </div>
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const playerUrl = decodeURIComponent(params.get('id'));
-        new Vue({
-            el: '#app',
-            data() {
-                return {
-                    loading: true
-                };
-            },
-            mounted() {
-                if (this.isValidUrl(playerUrl)) {
-                    this.initPlayer(playerUrl);
-                } else {
-                    alert('Invalid streaming URL.');
-                }
-            },
-            methods: {
-                isValidUrl(url) {
-                    return url && (url.startsWith('http://') || url.startsWith('https://'));
-                },
-                initPlayer(url) {
-                    const video = document.getElementById('video');
-                    video.src = url;
-                    video.play();
-                    this.loading = false;
-                }
-            }
+
+<div id="videoContainer"></div>
+
+<script>
+    function getQueryParam(key) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(key);
+    }
+
+    function playChannel(url) {
+        jwplayer('videoContainer').setup({
+            file: url,
+            width: "100%",
+            height: "100%",
+            aspectratio: "16:9",
+            autostart: true
         });
-    </script>
+    }
+
+    window.onload = function() {
+        const channelUrl = getQueryParam('id');
+        if (channelUrl) {
+            playChannel(channelUrl);
+        } else {
+            document.getElementById('videoContainer').innerHTML = 'No channel URL provided.';
+        }
+    }
+</script>
+
 </body>
 </html>
