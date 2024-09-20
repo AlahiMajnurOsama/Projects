@@ -41,7 +41,8 @@
     </div>
     <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <script>
-        const playerUrl = localStorage.getItem('channelUrl');
+        const params = new URLSearchParams(window.location.search);
+        const playerUrl = decodeURIComponent(params.get('id'));
         new Vue({
             el: '#app',
             data() {
