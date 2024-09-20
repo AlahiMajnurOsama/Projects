@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,9 +38,8 @@
         <div v-if="loading" class="flex items-center justify-center my-4">
             <div class="loading-indicator"></div>
         </div>
-        <div id="videoContainer" v-if="!loading"></div>
+        <video id="video" controls v-if="!loading" class="w-full h-auto"></video>
     </div>
-    <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
         const playerUrl = decodeURIComponent(params.get('id'));
@@ -62,17 +62,9 @@
                     return url && (url.startsWith('http://') || url.startsWith('https://'));
                 },
                 initPlayer(url) {
-                    jwplayer("videoContainer").setup({
-                        playlist: [{
-                            sources: [{
-                                file: url,
-                                type: "hls"
-                            }]
-                        }],
-                        primary: "html5",
-                        autostart: true,
-                        aspectratio: "16:9"
-                    });
+                    const video = document.getElementById('video');
+                    video.src = url;
+                    video.play();
                     this.loading = false;
                 }
             }
@@ -80,4 +72,3 @@
     </script>
 </body>
 </html>
-```
