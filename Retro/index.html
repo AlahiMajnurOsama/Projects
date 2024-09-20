@@ -132,7 +132,7 @@
                     this.fetchChannels();
                 },
                 fetchChannels() {
-                    fetch('https://app.bgcgeeks.tech/iptv1')
+                    fetch('https://app.bgcgeeks.tech/retrop')
                         .then(response => response.text())
                         .then(data => {
                             const lines = data.split('\n');
