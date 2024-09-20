@@ -166,8 +166,8 @@
                 },
                 openChannel(rawUrl) {
                     if (this.isValidUrl(rawUrl)) {
-                        localStorage.setItem('channelUrl', rawUrl);
-                        window.location.href = 'player.html';
+                        const channelName = encodeURIComponent(rawUrl);
+                        window.location.href = `player.php?id=${channelName}`;
                     } else {
                         alert('Invalid streaming URL.');
                     }
@@ -183,3 +183,4 @@
     </script>
 </body>
 </html>
+
