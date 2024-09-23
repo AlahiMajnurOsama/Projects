@@ -293,7 +293,7 @@
             popup.style.display = 'block';
             gsap.fromTo(popup, { opacity: 0 }, { opacity: 1, duration: 1 });
             setTimeout(() => {
-                gsap.to(popup, { opacity: 0, duration: 1, onComplete: () => {
+                gsap.to(popup, { opacity: 0, on: 1, onComplete: () => {
                     popup.style.display = 'none';
                     showProjects();
                 } });
@@ -352,6 +352,33 @@
             window.open(liveLink, '_blank');
         };
         document.addEventListener('DOMContentLoaded', matrixEffect);
+
+            // when the user loses focus
+
+window.addEventListener("blur", () => {
+
+document.title = "💔";
+
+});
+
+// when the user's focus is back to your tab
+
+window.addEventListener("focus", () => {
+
+document.title = "❤️‍🩹";
+
+});
+
+<!--
+Method 2:
+
+document.addEventListener("visibilitychange", () => {3 document.title document.visibilityState;
+
+// it can be either hidden or visible
+
+});
+
+-->
     </script>
 </body>
 </html>
