@@ -1,641 +1,211 @@
-<html><head><base href="Urban Mail - Alahi Majnur Osama ">
-<title>Urban Mail - Temporary Email Generator</title>
-<meta charset="utf-8">
+<html><head><base href="Urban Mail Regestry">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<title>Urban Mail Project Registry</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-  :root {
-    --bg-color: #0c1221;
-    --text-color: #e0e0e0;
-    --accent-color: #64ffda;
-    --secondary-color: #7f5af0;
-  }
+    :root {
+        --bg-color: #f0f4f8;
+        --text-color: #2c3e50;
+        --accent-color: #3498db;
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+    }
 
-  body {
-    font-family: 'Roboto', sans-serif;
-    color: var(--text-color);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&q=80');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-  }
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-  }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent-color);
-  }
+    .container {
+        max-width: 900px;
+        width: 95%;
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border: 1px solid var(--glass-border);
+        transition: all 0.3s ease;
+    }
 
-  .logo i {
-    margin-right: 0.5rem;
-    font-size: 2rem;
-  }
+    .container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.4);
+    }
 
-  #adminLoginBtn, #toggleBtn {
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 5px;
-    margin-left: 1rem;
-  }
+    h1, h2 {
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: 30px;
+    }
 
-  #adminLoginBtn:hover, #toggleBtn:hover {
-    background-color: #6b4dd1;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(127, 90, 240, 0.4);
-  }
+    .profile {
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+        background: var(--glass-bg);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
 
-  .container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-  }
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border: 3px solid var(--glass-border);
+    }
 
-  .content {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    padding: 2rem;
-    width: 90%;
-    max-width: 800px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
+    .profile-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-  h1 {
-    color: var(--accent-color);
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-    font-size: 2.5rem;
-    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-  }
+    .profile-info {
+        flex: 1;
+    }
 
-  .email-box {
-    display: flex;
-    margin-bottom: 1rem;
-  }
+    .welcome-message {
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        color: var(--accent-color);
+        font-weight: 600;
+    }
 
-  #tempEmail {
-    flex-grow: 1;
-    padding: 0.75rem;
-    font-size: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px 0 0 10px;
-    color: var(--text-color);
-  }
+    .projects {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+    }
 
-  .btn {
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 10px;
-  }
+    .project {
+        background: var(--glass-bg);
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
 
-  #copyBtn {
-    border-radius: 0 10px 10px 0;
-  }
+    .project:hover {
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
 
-  .btn:hover {
-    background-color: #6b4dd1;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(127, 90, 240, 0.4);
-  }
+    .project h3 {
+        margin-top: 0;
+        color: var(--accent-color);
+        font-size: 1.2em;
+    }
 
-  #generateBtn {
-    display: block;
-    width: 100%;
-    background-color: var(--accent-color);
-    color: var(--bg-color);
-    margin-bottom: 1rem;
-    font-weight: 700;
-  }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-  #generateBtn:hover {
-    background-color: #45e0c0;
-  }
+    .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
 
-  .inbox {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 1rem;
-    max-height: 400px;
-    overflow-y: auto;
-  }
+    .loading {
+        text-align: center;
+        font-size: 1.2em;
+        color: var(--accent-color);
+    }
 
-  .email-item {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-  }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
-  .delete-btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    background-color: #ff4757;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .delete-btn:hover {
-    background-color: #ff6b6b;
-  }
-
-  .email-item:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-  }
-
-  .email-item h3 {
-    margin: 0 0 0.5rem 0;
-    color: var(--accent-color);
-  }
-
-  .email-item p {
-    margin: 0;
-    color: var(--text-color);
-  }
-
-  .email-content {
-    display: none;
-    margin-top: 1rem;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-  }
-
-  .email-content.show {
-    display: block;
-  }
-
-  #adminLogin {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .admin-login-content {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    text-align: center;
-    max-width: 400px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
-  }
-
-  #adminPassword {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-  }
-
-  #adminPanel {
-    display: none;
-  }
-
-  #adminEmailList {
-    margin-top: 1rem;
-  }
-
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--secondary-color);
-    border-radius: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #6b4dd1;
-  }
-
-  #welcomePopup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  @keyframes colorChange {
-    0% { border-color: var(--accent-color); }
-    33% { border-color: var(--secondary-color); }
-    66% { border-color: #ff6b6b; }
-    100% { border-color: var(--accent-color); }
-  }
-
-  .popup-content {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    text-align: center;
-    max-width: 400px;
-    border: 4px solid var(--accent-color);
-    animation: colorChange 10s infinite;
-    box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
-  }
-
-  .popup-content img {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    margin-bottom: 1rem;
-    border-radius: 50%;
-    border: 3px solid var(--accent-color);
-  }
-
-  .popup-content h2 {
-    color: var(--accent-color);
-    margin-bottom: 1rem;
-  }
-
-  .popup-content p {
-    margin-bottom: 1.5rem;
-  }
-
-  .popup-btn {
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 10px;
-    margin: 0 0.5rem;
-  }
-
-  .popup-btn:hover {
-    background-color: #6b4dd1;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(127, 90, 240, 0.4);
-  }
+    .loading::after {
+        content: '';
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid var(--accent-color);
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
 </style>
 </head>
 <body>
-<div class="header">
-  <div class="logo">
-    <i class="fas fa-envelope"></i>
-    Urban Mail
-  </div>
-  <div>
-    <button id="adminLoginBtn">Admin Login</button>
-    <button id="toggleBtn" style="display: none;">Mail Generator</button>
-  </div>
-</div>
-
-<div id="welcomePopup">
-  <div class="popup-content">
-    <img src="https://lh3.googleusercontent.com/pw/AP1GczPXZoNVdA4dc2xBAUG3QxvqsJge03hJHLZosgULAPQ0vMIOPVnlUPQ8l5lrMXJmiWVjkr04MzL1uEWdrIWN5LBf5NHER8LS7a011mVErbGSqTeIPTw9MazP7rSRQuMDixW6MjI6lTu6PvwxqZien6oC=w1080-h1080-s-no-gm?authuser=0" alt="Alahi Majnur Osama">
-    <h2>Welcome to Urban Mail</h2>
-    <p>Assalamualaikum, <br> I'm Alahi Majnur Osama. </p>
-    <p>Welcome to The Urban World of Temp Mail</p>
-    <p>Experience the future of temporary email services. Secure, efficient, and user-friendly.</p>
-    <button class="popup-btn" id="enterBtn">Enter</button>
-    <button class="popup-btn" id="contactBtn">Contact</button>
-  </div>
-</div>
-
 <div class="container">
-  <div class="content" id="userContent" style="display: none;">
-    <h1>Urban Mail</h1>
-    <div class="email-box">
-      <input type="text" id="tempEmail" readonly>
-      <button id="copyBtn" class="btn">Copy</button>
+    <h1>Urban Mail Project Registry</h1>
+    
+    <div class="profile">
+        <div class="profile-image">
+            <img src="https://via.placeholder.com/150" alt="Profile Image" width="150" height="150">
+        </div>
+        <div class="profile-info">
+            <div class="welcome-message">Welcome to Urban Mail Projects!</div>
+            <p>I'm passionate about creating efficient and innovative TempMail solutions. Here you'll find a collection of my projects under the Urban Mail umbrella, showcasing cutting-edge temporary email technologies and implementations.</p>
+        </div>
     </div>
-    <button id="generateBtn" class="btn">Generate New Email</button>
-    <div class="inbox">
-      <h2>Inbox</h2>
-      <div id="emailList"></div>
+    
+    <h2>My Projects</h2>
+    <div id="projects" class="projects">
+        <div class="loading">Loading projects...</div>
     </div>
-  </div>
-
-  <div class="content" id="adminPanel" style="display: none;">
-    <h1>Admin Panel</h1>
-    <div id="adminEmailList"></div>
-  </div>
-</div>
-
-<div id="adminLogin">
-  <div class="admin-login-content">
-    <h2>Admin Login</h2>
-    <input type="password" id="adminPassword" placeholder="Enter password">
-    <button class="btn" id="adminLoginSubmit">Login</button>
-  </div>
 </div>
 
 <script>
-const tempEmail = document.getElementById('tempEmail');
-const generateBtn = document.getElementById('generateBtn');
-const copyBtn = document.getElementById('copyBtn');
-const emailList = document.getElementById('emailList');
-const welcomePopup = document.getElementById('welcomePopup');
-const userContent = document.getElementById('userContent');
-const enterBtn = document.getElementById('enterBtn');
-const contactBtn = document.getElementById('contactBtn');
-const adminLoginBtn = document.getElementById('adminLoginBtn');
-const adminLogin = document.getElementById('adminLogin');
-const adminLoginSubmit = document.getElementById('adminLoginSubmit');
-const adminPanel = document.getElementById('adminPanel');
-const adminEmailList = document.getElementById('adminEmailList');
-const toggleBtn = document.getElementById('toggleBtn');
+const projectsUrl = 'https://api.github.com/repos/AlahiMajnurOsama/Projects/contents/UrbanMail';
 
-let currentEmail = localStorage.getItem('tempEmail') || '';
-let generatedEmails = JSON.parse(localStorage.getItem('generatedEmails')) || [];
-
-async function generateTempEmail() {
-  try {
-    const response = await fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1');
-    const data = await response.json();
-    currentEmail = data[0];
-    tempEmail.value = currentEmail;
-    localStorage.setItem('tempEmail', currentEmail);
-    emailList.innerHTML = '';
-    generatedEmails.push(currentEmail);
-    localStorage.setItem('generatedEmails', JSON.stringify(generatedEmails));
-    displayAdminEmails();
-  } catch (error) {
-    console.error('Error generating email:', error);
-    tempEmail.value = 'Error generating email. Please try again.';
-  }
-}
-
-function copyEmail() {
-  tempEmail.select();
-  document.execCommand('copy');
-}
-
-async function checkEmails(email) {
-  if (!email) return [];
-  
-  const [login, domain] = email.split('@');
-  
-  try {
-    const response = await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${login}&domain=${domain}`);
-    const emails = await response.json();
-    
-    const storedEmails = JSON.parse(localStorage.getItem('storedEmails')) || {};
-    storedEmails[email] = emails;
-    localStorage.setItem('storedEmails', JSON.stringify(storedEmails));
-    
-    return emails;
-  } catch (error) {
-    console.error('Error fetching emails:', error);
-    return [];
-  }
-}
-
-async function displayEmails(targetElement, email) {
-  const storedEmails = JSON.parse(localStorage.getItem('storedEmails')) || {};
-  const emails = storedEmails[email] || await checkEmails(email);
-  
-  targetElement.innerHTML = '';
-  emails.forEach(email => {
-    const emailItem = document.createElement('div');
-    emailItem.className = 'email-item';
-    emailItem.innerHTML = `
-      <h3>${email.subject}</h3>
-      <p>From: ${email.from}</p>
-      <p>Date: ${new Date(email.date).toLocaleString()}</p>
-      <div class="email-content">
-        <p><strong>Received from:</strong> ${email.from}</p>
-        <p><strong>Received at:</strong> ${new Date(email.date).toLocaleString()}</p>
-        <p><strong>Subject:</strong> ${email.subject}</p>
-        <p><strong>Message:</strong></p>
-        <div id="message-${email.id}">Loading...</div>
-      </div>
-    `;
-    targetElement.appendChild(emailItem);
-
-    emailItem.addEventListener('click', async () => {
-      const content = emailItem.querySelector('.email-content');
-      content.classList.toggle('show');
-
-      if (content.classList.contains('show')) {
-        const messageContent = document.getElementById(`message-${email.id}`);
-        if (messageContent.textContent === 'Loading...') {
-          try {
-            const [login, domain] = currentEmail.split('@');
-            const messageResponse = await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${email.id}`);
-            const messageData = await messageResponse.json();
-            
-            const storedMessages = JSON.parse(localStorage.getItem('storedMessages')) || {};
-            if (!storedMessages[currentEmail]) storedMessages[currentEmail] = {};
-            storedMessages[currentEmail][email.id] = messageData;
-            localStorage.setItem('storedMessages', JSON.stringify(storedMessages));
-            
-            messageContent.innerHTML = messageData.body;
-          } catch (error) {
-            console.error('Error fetching message:', error);
-            messageContent.textContent = 'Error loading message. Please try again.';
-          }
-        }
-      }
-    });
-  });
-}
-
-async function displayAdminEmails() {
-  adminEmailList.innerHTML = '';
-  generatedEmails = JSON.parse(localStorage.getItem('generatedEmails')) || [];
-  for (const email of generatedEmails) {
-    const emailItem = document.createElement('div');
-    emailItem.className = 'email-item';
-    emailItem.innerHTML = `
-      <h3>${email}</h3>
-      <button class="delete-btn">Delete</button>
-    `;
-    const emailContent = document.createElement('div');
-    emailContent.className = 'email-content';
-    emailItem.appendChild(emailContent);
-    
-    emailItem.querySelector('.delete-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      deleteEmail(email);
-    });
-    
-    emailItem.addEventListener('click', async () => {
-      emailContent.classList.toggle('show');
-      if (emailContent.classList.contains('show') && emailContent.innerHTML === '') {
-        emailContent.innerHTML = 'Loading...';
-        const storedEmails = JSON.parse(localStorage.getItem('storedEmails')) || {};
-        const emails = storedEmails[email] || await checkEmails(email);
-        emailContent.innerHTML = '';
-        emails.forEach(mail => {
-          const mailItem = document.createElement('div');
-          mailItem.className = 'mail-item';
-          mailItem.innerHTML = `
-            <p><strong>From:</strong> ${mail.from}</p>
-            <p><strong>Date:</strong> ${new Date(mail.date).toLocaleString()}</p>
-            <p><strong>Subject:</strong> ${mail.subject}</p>
-            <p><strong>Message:</strong></p>
-            <div id="admin-message-${mail.id}">Loading...</div>
-          `;
-          emailContent.appendChild(mailItem);
-          
-          fetchMessageContent(email, mail.id, `admin-message-${mail.id}`);
-        });
+async function fetchProjects() {
+    try {
+        const response = await fetch(projectsUrl);
+        const data = await response.json();
+        const projectsContainer = document.getElementById('projects');
+        projectsContainer.innerHTML = ''; // Clear loading message
         
-        if (emails.length === 0) {
-          emailContent.innerHTML = '<p>No emails received yet.</p>';
-        }
-      }
-    });
-    
-    adminEmailList.appendChild(emailItem);
-  }
+        data.forEach((item, index) => {
+            if (item.type === 'dir') {
+                const projectElement = document.createElement('div');
+                projectElement.className = 'project fade-in';
+                projectElement.style.animationDelay = `${index * 0.1}s`;
+                projectElement.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>Click to view project details</p>
+                `;
+                projectElement.addEventListener('click', () => {
+                    window.location.href = `https://alahimajnurosama.github.io/Projects/UrbanMail/${item.name}`;
+                });
+                projectsContainer.appendChild(projectElement);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        const projectsContainer = document.getElementById('projects');
+        projectsContainer.innerHTML = '<p>Error loading projects. Please try again later.</p>';
+    }
 }
 
-function deleteEmail(email) {
-  generatedEmails = generatedEmails.filter(e => e !== email);
-  localStorage.setItem('generatedEmails', JSON.stringify(generatedEmails));
-  displayAdminEmails();
-}
-
-async function fetchMessageContent(email, messageId, elementId) {
-  const [login, domain] = email.split('@');
-  try {
-    const messageResponse = await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${messageId}`);
-    const messageData = await messageResponse.json();
-    
-    const storedMessages = JSON.parse(localStorage.getItem('storedMessages')) || {};
-    if (!storedMessages[email]) storedMessages[email] = {};
-    storedMessages[email][messageId] = messageData;
-    localStorage.setItem('storedMessages', JSON.stringify(storedMessages));
-    
-    document.getElementById(elementId).innerHTML = messageData.body;
-  } catch (error) {
-    console.error('Error fetching message:', error);
-    document.getElementById(elementId).textContent = 'Error loading message. Please try again.';
-  }
-}
-
-function toggleInterface() {
-  if (adminPanel.style.display === 'block') {
-    adminPanel.style.display = 'none';
-    userContent.style.display = 'block';
-    toggleBtn.textContent = 'Admin Panel';
-  } else {
-    adminPanel.style.display = 'block';
-    userContent.style.display = 'none';
-    toggleBtn.textContent = 'Mail Generator';
-    displayAdminEmails();
-  }
-}
-
-setInterval(() => {
-  displayEmails(emailList, currentEmail);
-  if (adminPanel.style.display === 'block') {
-    displayAdminEmails();
-  }
-}, 10000);
-
-generateBtn.addEventListener('click', generateTempEmail);
-copyBtn.addEventListener('click', copyEmail);
-
-enterBtn.addEventListener('click', () => {
-  welcomePopup.style.display = 'none';
-  userContent.style.display = 'block';
-});
-
-contactBtn.addEventListener('click', () => {
-  window.location.href = 'https://alahimajnurosama.github.io';
-});
-
-adminLoginBtn.addEventListener('click', () => {
-  adminLogin.style.display = 'flex';
-});
-
-adminLoginSubmit.addEventListener('click', () => {
-  const password = document.getElementById('adminPassword').value;
-  if (password === '726268') {
-    adminLogin.style.display = 'none';
-    userContent.style.display = 'none';
-    adminPanel.style.display = 'block';
-    displayAdminEmails();
-    adminLoginBtn.style.display = 'none';
-    toggleBtn.style.display = 'inline-block';
-  } else {
-    alert('Incorrect password');
-  }
-});
-
-toggleBtn.addEventListener('click', toggleInterface);
-
-// Check for new emails every 10 seconds
-setInterval(() => displayEmails(emailList, currentEmail), 10000);
-
-// Load the stored email or generate a new one on page load
-if (currentEmail) {
-  tempEmail.value = currentEmail;
-  displayEmails(emailList, currentEmail);
-} else {
-  generateTempEmail();
-}
+fetchProjects();
 </script>
 </body>
 </html>
