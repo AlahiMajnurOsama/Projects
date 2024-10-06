@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Player</title>
+    <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
+    <script src="https://vjs.zencdn.net/7.10.2/video.js"></script> <!-- Video.js -->
+    <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script> <!-- Plyr.js -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #000;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #videoContainer {
+            width: 100%;
+            height: 80vh;
+            margin-bottom: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+        .modal-content button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #444;
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+        .modal-content button:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div id="videoContainer"></div>
+
+<!-- Modal for Player Selection -->
+<div id="playerModal" class="modal">
+    <div class="modal-content">
+        <h2>Select Your Player</h2>
+        <button onclick="choosePlayer('jw')">JW Player</button>
+        <button onclick="choosePlayer('videojs')">Video.js Player</button>
+        <button onclick="choosePlayer('plyr')">Plyr Player</button>
+        <button onclick="smartChoose()">Smart Choose</button>
+    </div>
+</div>
+
+<script>
+    let selectedPlayer = null;
+
+    // Show the player selection modal
+    function showPlayerModal() {
+        document.getElementById('playerModal').style.display = 'flex';
+    }
+
+    // Get URL parameters
+    function getQueryParam(key) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(key);
+    }
+
+    // Function to load the video based on the selected player
+    function loadPlayer(url) {
+        if (selectedPlayer === 'jw') {
+            jwplayer('videoContainer').setup({
+                file: url,
+                width: "100%",
+                height: "100%",
+                aspectratio: "16:9",
+                autostart: true
+            });
+        } else if (selectedPlayer === 'videojs') {
+            document.getElementById('videoContainer').innerHTML = '<video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%"><source src="' + url + '" type="application/x-mpegURL"></video>';
+            videojs('#videoPlayer').play();
+        } else if (selectedPlayer === 'plyr') {
+            document.getElementById('videoContainer').innerHTML = '<video controls crossorigin playsinline id="plyrPlayer" style="width: 100%; height: 100%;"><source src="' + url + '" type="application/x-mpegURL" /></video>';
+            const player = new Plyr('#plyrPlayer');
+            player.play();
+        }
+    }
+
+    // Manual player selection
+    function choosePlayer(player) {
+        selectedPlayer = player;
+        const channelUrl = getQueryParam('id');
+        if (channelUrl) {
+            loadPlayer(channelUrl);
+        } else {
+            document.getElementById('videoContainer').innerHTML = 'No channel URL provided.';
+        }
+        document.getElementById('playerModal').style.display = 'none';
+    }
+
+    // Smart Choose (auto-detect and choose the best player)
+    function smartChoose() {
+        const channelUrl = getQueryParam('id');
+        if (channelUrl) {
+            // Here, implement logic to auto-select based on factors like stream quality or server response
+            // For simplicity, we'll randomly pick one (You can enhance this with real network tests)
+            const players = ['jw', 'videojs', 'plyr'];
+            selectedPlayer = players[Math.floor(Math.random() * players.length)];
+            loadPlayer(channelUrl);
+        } else {
+            document.getElementById('videoContainer').innerHTML = 'No channel URL provided.';
+        }
+        document.getElementById('playerModal').style.display = 'none';
+    }
+
+    // On window load, show the player modal
+    window.onload = function() {
+        showPlayerModal();
+    }
+</script>
+
+</body>
+</html>
