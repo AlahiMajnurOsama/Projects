@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPTV Player</title>
     <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
-    <script src="https://vjs.zencdn.net/7.10.2/video.js"></script> <!-- Video.js -->
+    <script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
     <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script> <!-- Plyr.js -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
     <style>
@@ -25,9 +25,7 @@
             width: 100%;
             height: 80vh;
             margin-bottom: 20px;
-            position: relative;
         }
-        /* Modal for Player Selection */
         .modal {
             display: none;
             position: fixed;
@@ -61,118 +59,14 @@
         .modal-content button:hover {
             background-color: #666;
         }
-        /* Loading Overlay */
-        #loadingOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-        #loadingOverlay img {
-            width: 150px;
-            animation: spin 1.5s infinite linear;
-        }
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        /* TV Icon and App Name */
-        #appLogo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 3;
-        }
-        #appLogo img {
-            width: 40px;
-            margin-right: 10px;
-        }
-        #appLogo h1 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-        /* Thumbnails preview styling */
-        .thumbnail-preview {
-            display: none;
-            position: absolute;
-            bottom: 45px;
-            width: 120px;
-            height: 90px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        #progress-bar:hover .thumbnail-preview {
-            display: block;
-        }
-        /* Remote control button */
-        #remoteBtn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 3;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        /* Hidden remote control panel */
-        #remoteControlPanel {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 150px;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 5;
-            padding: 20px;
-            color: white;
-        }
-        /* Show/Hide animation for remote */
-        .show-remote {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .remote-control-button {
-            background-color: #333;
-            padding: 10px;
-            margin: 5px;
-            border-radius: 8px;
-            color: white;
-            border: none;
+        .error-message {
+            color: red;
         }
     </style>
 </head>
 <body>
 
-<!-- TV Icon and App Name -->
-<div id="appLogo">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Television_icon.svg/512px-Television_icon.svg.png" alt="TV Icon">
-    <h1>Retro</h1>
-</div>
-
-<!-- Remote Button -->
-<button id="remoteBtn">📱</button>
-
-<!-- Video Player Container -->
-<div id="videoContainer">
-    <div id="loadingOverlay">
-        <img src="https://your-logo-link.com/logo.png" alt="Loading Logo">
-    </div>
-</div>
+<div id="videoContainer"></div>
 
 <!-- Modal for Player Selection -->
 <div id="playerModal" class="modal">
@@ -185,13 +79,8 @@
     </div>
 </div>
 
-<!-- Remote Control Panel -->
-<div id="remoteControlPanel">
-    <button class="remote-control-button" onclick="pauseVideo()">Pause</button>
-    <button class="remote-control-button" onclick="playVideo()">Play</button>
-    <button class="remote-control-button" onclick="muteVideo()">Mute</button>
-    <button class="remote-control-button" onclick="unmuteVideo()">Unmute</button>
-</div>
+<!-- Error Message -->
+<div id="errorMessage" class="error-message"></div>
 
 <script>
     let selectedPlayer = null;
@@ -217,25 +106,19 @@
                 aspectratio: "16:9",
                 autostart: true
             });
-            // Hide loading overlay after video starts
-            jwplayer().on('play', () => {
-                document.getElementById('loadingOverlay').style.display = 'none';
-            });
         } else if (selectedPlayer === 'videojs') {
-            document.getElementById('videoContainer').innerHTML = '<video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%"><source src="' + url + '" type="application/x-mpegURL"></video>';
+            document.getElementById('videoContainer').innerHTML = 
+              '<video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%">' +
+              '<source src="' + url + '" type="application/x-mpegURL"></video>';
             videojs('#videoPlayer').play();
-            // Hide loading overlay after video starts
-            videojs('#videoPlayer').on('play', () => {
-                document.getElementById('loadingOverlay').style.display = 'none';
-            });
         } else if (selectedPlayer === 'plyr') {
-            document.getElementById('videoContainer').innerHTML = '<video controls crossorigin playsinline id="plyrPlayer" style="width: 100%; height: 100%;"><source src="' + url + '" type="application/x-mpegURL" /></video>';
+            document.getElementById('videoContainer').innerHTML = 
+              '<video controls crossorigin playsinline id="plyrPlayer" style="width: 100%; height: 100%;">' +
+              '<source src="' + url + '" type="application/x-mpegURL" /></video>';
             const player = new Plyr('#plyrPlayer');
             player.play();
-            // Hide loading overlay after video starts
-            player.on('play', () => {
-                document.getElementById('loadingOverlay').style.display = 'none';
-            });
+        } else {
+            displayError('Failed to load the player.');
         }
     }
 
@@ -246,4 +129,44 @@
         if (channelUrl) {
             loadPlayer(channelUrl);
         } else {
-            document.getElementById('videoContainer
+            displayError('No channel URL provided.');
+        }
+        document.getElementById('playerModal').style.display = 'none';
+    }
+
+    // Enhanced Smart Choose logic
+    function smartChoose() {
+        const channelUrl = getQueryParam('id');
+        if (channelUrl) {
+            if (isHighBandwidth()) {
+                selectedPlayer = 'jw';  // Assume JW Player handles HD streams better
+            } else {
+                selectedPlayer = 'videojs';  // Assume Video.js is more lightweight
+            }
+            loadPlayer(channelUrl);
+        } else {
+            displayError('No channel URL provided.');
+        }
+        document.getElementById('playerModal').style.display = 'none';
+    }
+
+    // Example function to detect network bandwidth (mock implementation)
+    function isHighBandwidth() {
+        // This is just a placeholder. You could enhance it with real network checks.
+        return Math.random() > 0.5;  // Simulate a 50-50 high/low bandwidth condition
+    }
+
+    // Display error messages
+    function displayError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.innerText = message;
+    }
+
+    // On window load, show the player modal
+    window.onload = function() {
+        showPlayerModal();
+    }
+</script>
+
+</body>
+</html>
