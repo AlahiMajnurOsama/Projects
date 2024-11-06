@@ -1,0 +1,277 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanFlix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.6/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.postimg.cc/Kc3x4TH6/1728897213454.png">
+    <style>
+        body {
+            background-image: url('https://images.pexels.com/photos/206359/pexels-photo-206359.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+        .glass-box {
+            backdrop-filter: blur(30px);
+            background-color: rgba(30, 30, 30, 0.85);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            margin: 20px auto;
+        }
+        .video-player {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            outline: none;
+        }
+        #videoLoading {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            border-radius: 15px;
+        }
+        .controls {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 0 0 15px 15px;
+        }
+        .play-button, .pause-button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .play-button {
+            background-color: #ff4757;
+        }
+        .play-button:hover {
+            background-color: #e84118;
+        }
+        .pause-button {
+            background-color: #ffa502;
+        }
+        .pause-button:hover {
+            background-color: #e67e22;
+        }
+        .channel-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-height: calc(50vh - 80px);
+            overflow-y: auto;
+            margin: 20px;
+            margin-bottom: 80px;
+        }
+        .channel-button {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .channel-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+        }
+        .channel-button img {
+            width: 100%;
+            height: auto;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .channel-name {
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 10px;
+            color: #ffffff;
+        }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .nav-item {
+            text-align: center;
+            color: white;
+            position: relative;
+            flex: 1;
+            line-height: 20px;
+        }
+        .nav-item:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            color: white;
+            font-size: 0.8rem;
+            z-index: 20;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body class="bg-gray-900">
+    <div id="app" class="flex flex-col h-screen">
+        <div v-show="activePage === 'channels'" class="flex flex-col mb-6">
+            <div class="video-player glass-box mb-4">
+                <div id="videoLoading">
+                    <p>Loading...</p>
+                </div>
+                <video id="videoPlayer" controls crossorigin playsinline autoplay>
+                    <source id="videoSource" type="application/vnd.apple.mpegurl" src="">
+                </video>
+                <div class="controls">
+                    <button class="play-button" @click="playChannel(activeChannel)">Play</button>
+                    <button class="pause-button" @click="pauseChannel()">Pause</button>
+                </div>
+            </div>
+            <div class="flex items-center mb-4">
+                <h3 class="text-2xl font-bold mr-2">Available Channels</h3>
+            </div>
+            <div class="channel-list glass-box">
+                <div class="channel-button" v-for="channel in sortedChannels" :key="channel.name" @click="playChannel(channel.url)">
+                    <img :src="channel.logo" :alt="channel.name + ' Logo'">
+                    <div class="channel-name">{{ channel.name }}</div>
+                </div>
+            </div>
+        </div>
+        <div v-show="activePage === 'home'" class="glass-box mb-6 p-4">
+            <h2 class="text-4xl font-bold mb-4">Welcome to UrbanFlix</h2>
+            <p class="text-lg mb-4">UrbanFlix is your premier destination for streaming the best content in the urban genre. We offer a curated list of channels and a seamless viewing experience for you to enjoy your favorite shows, music, and events.</p>
+            <h3 class="text-2xl font-semibold mt-4">From the Admin:</h3>
+            <p class="text-md mb-2">Thank you for joining UrbanFlix! We're dedicated to providing you with high-quality entertainment and excellent service. Feel free to explore our channels and let us know your feedback!</p>
+            <p class="text-md mb-4">Happy Watching!</p>
+        </div>
+        <div v-show="activePage === 'admin'" class="glass-box p-8 mb-6 text-center">
+            <h2 class="text-3xl font-bold mb-4">Contact the Admin</h2>
+            <img src="images/admin.jpg" alt="Admin Image" class="rounded-full w-24 h-24 mx-auto mb-4">
+            <p class="text-lg">For inquiries, please reach out via social media:</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="https://facebook.com" class="text-blue-600 hover:underline">Facebook</a>
+                <a href="https://twitter.com" class="text-blue-400 hover:underline">Twitter</a>
+                <a href="https://instagram.com" class="text-pink-600 hover:underline">Instagram</a>
+            </div>
+            <p class="mt-4">Email: admin@urbanflix.com</p>
+        </div>
+        <div class="nav-bar">
+            <div class="nav-item" @click="activePage = 'home'" data-tooltip="Home">
+                <span class="material-icons">home</span>
+            </div>
+            <div class="nav-item" @click="activePage = 'channels'" data-tooltip="Channels">
+                <span class="material-icons">tv</span>
+            </div>
+            <div class="nav-item" @click="activePage = 'admin'" data-tooltip="Admin">
+                <span class="material-icons">contacts</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                channels: [],
+                activePage: 'home',
+                activeChannel: null
+            },
+            computed: {
+                sortedChannels() {
+                    return this.channels.sort((a, b) => a.name.localeCompare(b.name));
+                }
+            },
+            methods: {
+                fetchChannels() {
+                    fetch('https://raw.githubusercontent.com/eaminvai/BongoFlix/refs/heads/main/Eamin%20Vai%20Live%20Tv')
+                        .then(response => response.text())
+                        .then(data => {
+                            const lines = data.split('\n');
+                            let channels = [];
+                            let currentChannel = {};
+                            lines.forEach(line => {
+                                if (line.startsWith('#EXTINF')) {
+                                    const logoMatch = line.match(/tvg-logo="(.*?)"/);
+                                    const nameMatch = line.match(/,(.*)/);
+                                    if (logoMatch && nameMatch) {
+                                        currentChannel.logo = logoMatch[1];
+                                        currentChannel.name = nameMatch[1];
+                                    }
+                                } else if (line.startsWith('http')) {
+                                    currentChannel.url = line.trim();
+                                    channels.push(currentChannel);
+                                    currentChannel = {};
+                                }
+                            });
+                            this.channels = channels;
+                        });
+                },
+                playChannel(url) {
+                    const video = document.getElementById('videoPlayer');
+                    const videoLoading = document.getElementById('videoLoading');
+                    videoLoading.style.display = 'flex';
+                    if (Hls.isSupported()) {
+                        const hls = new Hls();
+                        hls.loadSource(url);
+                        hls.attachMedia(video);
+                    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        video.src = url;
+                    }
+                    video.addEventListener('playing', () => {
+                        videoLoading.style.display = 'none';
+                    });
+                    video.play();
+                    this.activeChannel = url;
+                },
+                pauseChannel() {
+                    const video = document.getElementById('videoPlayer');
+                    video.pause();
+                }
+            },
+            created() {
+                this.fetchChannels();
+            }
+        });
+    </script>
+</body>
+</html>
+```
