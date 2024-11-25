@@ -136,7 +136,7 @@
                     this.fetchChannels();
                 },
                 fetchChannels() {
-                    fetch('https://app.bgcgeeks.tech/retrop')
+                    fetch('https://raw.githubusercontent.com/AlahiMajnurOsama/Tv/refs/heads/main/indian.m3u')
                         .then(response => response.text())
                         .then(data => {
                             const lines = data.split('\n');
