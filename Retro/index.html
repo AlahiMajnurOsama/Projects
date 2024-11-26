@@ -136,7 +136,7 @@
                     this.fetchChannels();
                 },
                 fetchChannels() {
-                    fetch('https://livecast.app.tc/CloudCDN.m3u')
+                    fetch('https://raw.githubusercontent.com/AlahiMajnurOsama/Tv/refs/heads/main/CloudCDN.m3u')
                         .then(response => response.text())
                         .then(data => {
                             const lines = data.split('\n');
