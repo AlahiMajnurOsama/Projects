@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Encrypter</title>
+    <link rel="shortcut icon" href="http://www.isdntek.com/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.14.3/dist/full.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Ubuntu:wght@400;700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/firebase@8.6.8/firebase-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(180deg, #001f2d, #004b55);
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            animation: backgroundMove 20s ease-in-out infinite;
+        }
+        @keyframes backgroundMove {
+            from { background-position: 0% 0%; }
+            to { background-position: 100% 100%; }
+        }
+        .wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('./waves.svg') repeat-x;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn-custom {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #1d9e9e;
+            transform: scale(1.05);
+        }
+        .textarea-custom {
+            transition: all 0.3s ease;
+        }
+        .textarea-custom:focus {
+            border-color: #1d9e9e;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        footer {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wave"></div>
+    <div class="container mx-auto py-10 z-10 relative">
+        <div class="text-center mb-10">
+            <h1 class="text-5xl font-bold mb-2">Urban Encrypter</h1>
+            <p class="font-light text-xl">Transform your HTML securely and seamlessly</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass shadow-lg">
+                <h2 class="text-3xl font-semibold mb-4">Encode HTML</h2>
+                <textarea id="InputArea" class="textarea textarea-custom w-full h-48 mb-4" placeholder="Enter HTML here..." onchange="FileSizes()" onkeyup="FileSizes()" onmouseup="FileSizes()"></textarea>
+                <div class="flex justify-between items-center">
+                    <button class="btn btn-custom w-1/3" onclick="Encrypt()">Encode</button>
+                    <span id="topSize" class="text-lg">0</span>
+                    <button class="btn btn-custom w-1/3" onclick="Preview(0)">Preview</button>
+                </div>
+                <div class="mt-4 flex justify-start">
+                    <label class="mr-5 cursor-pointer">
+                        <input type="radio" name="enctype" checked onclick="fullenc=false" class="radio radio-primary"> Basic Encoding
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="enctype" onclick="fullenc=true" class="radio radio-primary"> Full Encoding
+                    </label>
+                </div>
+            </div>
+            <div class="glass shadow-lg">
+                <h2 class="text-3xl font-semibold mb-4">Decode HTML</h2>
+                <textarea id="OutputArea" class="textarea textarea-custom w-full h-48 mb-4" placeholder="Enter encrypted HTML here..." onchange="FileSizes()" onkeyup="FileSizes()" onmouseup="FileSizes()"></textarea>
+                <div class="flex justify-between items-center">
+                    <button class="btn btn-custom w-1/3" onclick="Decrypt()">Decode</button>
+                    <span id="bottomSize" class="text-lg">0</span>
+                    <button class="btn btn-custom w-1/3" onclick="Preview(1)">Preview</button>
+                </div>
+            </div>
+        </div>
+        <footer class="text-center mt-10">
+            <p>&copy;Created By Alahi Majnur Osama</p>
+        </footer>
+    </div>
+    <script>
+        var quot = "'";
+        var fullenc = false;
+
+        function Encrypt() {
+            fullenc ? EncryptAll() : EncryptBasic();
+        }
+
+        function EncryptBasic() {
+            var NewCode = escape(document.getElementById('InputArea').value);
+            NewCode = '<!-- Encrypted By Urban Security. Created By Alahi Majnur Osama -->\n<script language="javascript">document.write(unescape(' + quot + NewCode + quot + '))<' + '/script>\n';
+            document.getElementById('OutputArea').value = NewCode;
+            FileSizes();
+        }
+
+        function EncryptAll() {
+            var NewCode = "";
+            var OldCode = document.getElementById('InputArea').value;
+            for (var i = 0; i < OldCode.length; i++) {
+                NewCode += Hex(OldCode.charCodeAt(i));
+            }
+            NewCode = '<!-- Encrypted By Urban Security. Created By Alahi Majnur Osama -->\n<script language="javascript">document.write(unescape(' + quot + NewCode + quot + '))<' + '/script>\n';
+            document.getElementById('OutputArea').value = NewCode;
+            FileSizes();
+        }
+
+        function Decrypt() {
+            var NewCode = unescape(document.getElementById('InputArea').value);
+            NewCode = NewCode.replace(/<!-- Encrypted By Urban Security. Created By Alahi Majnur Osama -->\\n/,"");
+            NewCode = NewCode.replace("<script language=javascript>document.write(unescape('", "");
+            NewCode = NewCode.replace("'))<" + "/script>", "");
+            document.getElementById('OutputArea').value = NewCode;
+            FileSizes();
+        }
+
+        function Hex(dec) {
+            var hexbase = "0123456789ABCDEF";
+            var hx_hi = Math.floor(dec / 16), hx_lo = dec % 16;
+            return '%' + hexbase.substr(hx_hi, 1) + hexbase.substr(hx_lo, 1);
+        }
+
+        function FileSizes() {
+            document.getElementById('topSize').textContent = document.getElementById('InputArea').value.length;
+            document.getElementById('bottomSize').textContent = document.getElementById('OutputArea').value.length;
+        }
+
+        function Preview(selection) {
+            var newpage = selection === 0 ? document.getElementById('InputArea').value : document.getElementById('OutputArea').value;
+            var w = window.open("", "popup", "width=600,height=350,left=200,top=200");
+            w.document.writeln("<html><title>Preview</title><body style='background-color:#1f2937; color:white;'>" + newpage + "<br><button style='background-color:#1d9e9e; color:white; border:none; padding:10px; border-radius:5px;' onclick='window.close()'>Close Window</button></body></html>");
+            w.document.close();
+            w.focus();
+        }
+    </script>
+</body>
+</html>
