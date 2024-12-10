@@ -136,7 +136,7 @@
                     this.fetchChannels();
                 },
                 fetchChannels() {
-                    fetch('https://raw.githubusercontent.com/AlahiMajnurOsama/Tv/refs/heads/main/totaflix.m3u')
+                    fetch('https://raw.githubusercontent.com/AlahiMajnurOsama/Tv/refs/heads/main/totaflix')
                         .then(response => response.text())
                         .then(data => {
                             const lines = data.split('\n');
