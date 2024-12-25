@@ -3,96 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vidstack IPTV Player</title>
-    <link rel="stylesheet" href="https://cdn.vidstack.io/player.css" />
-    <link rel="stylesheet" href="https://cdn.vidstack.io/plyr.css" />
+    <title>Vidstack Dynamic Player</title>
+    <link rel="stylesheet" href="https://cdn.vidstack.io/player.css">
     <style>
         body {
-            font-family: Poppins, sans-serif;
-            background: #000;
-            color: white;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
         }
-        #videoContainer {
+        #playerContainer {
             width: 100%;
-            height: 80vh;
-        }
-        .error-message {
-            color: red;
+            max-width: 1200px;
+            height: 70vh;
         }
     </style>
 </head>
 <body>
+    <!-- Player Container -->
+    <div id="playerContainer"></div>
 
-<!-- Player Container -->
-<div id="videoContainer"></div>
+    <script type="module">
+        import '@vidstack/react/player/styles/default/theme.css';
+        import '@vidstack/react/player/styles/default/layouts/audio.css';
+        import '@vidstack/react/player/styles/default/layouts/video.css';
 
-<!-- Error Message -->
-<div id="errorMessage" class="error-message"></div>
+        import { VidstackPlayer, VidstackPlayerLayout } from 'https://cdn.vidstack.io/player';
 
-<script type="module">
-    import { PlyrLayout, VidstackPlayer } from 'https://cdn.vidstack.io/player';
-
-    const container = document.getElementById('videoContainer');
-    const errorMessage = document.getElementById('errorMessage');
-
-    // Get the video URL from query parameters
-    function getQueryParam(key) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(key);
-    }
-
-    // Initialize Vidstack Player
-    async function initializePlayer() {
-        const videoUrl = getQueryParam('id');
-        if (!videoUrl) {
-            displayError('No video URL provided.');
-            return;
+        // Utility function to get query parameters from URL
+        function getQueryParam(key) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(key);
         }
 
-        try {
-            // Clear previous content
-            container.innerHTML = '';
-
-            // Create player dynamically
-            const player = await VidstackPlayer.create({
-                target: '#videoContainer',
-                title: 'Vidstack IPTV Stream',
-                src: videoUrl,
-                poster: 'https://via.placeholder.com/1280x720?text=Vidstack+IPTV',
-                layout: new PlyrLayout({
-                    thumbnails: 'https://files.vidstack.io/sprite-fight/thumbnails.vtt', // Optional
-                }),
-                playsinline: true, // Optional for mobile behavior
-                keepAlive: true,  // Keeps the player alive during routing changes
+        // Fetch the video URL from the `id` parameter
+        const videoSrc = getQueryParam('id');
+        if (!videoSrc) {
+            document.body.innerHTML =
+                '<p style="color: red; text-align: center;">Error: No video URL provided. Please provide a valid `id` parameter in the URL.</p>';
+        } else {
+            // Player Layout Configuration
+            const layout = new VidstackPlayerLayout({
+                thumbnails: 'https://files.vidstack.io/sprite-fight/thumbnails.vtt',
             });
 
-            // Listen to destroy for cleanup
-            player.addEventListener('destroy', () => {
-                console.log('Player destroyed');
-            });
-        } catch (error) {
-            displayError('Failed to initialize Vidstack Player.');
-            console.error(error);
+            // Initialize the player
+            (async function initializePlayer() {
+                try {
+                    const player = await VidstackPlayer.create({
+                        target: '#playerContainer', // Attach to this container
+                        src: videoSrc, // Dynamic video source
+                        viewType: 'video',
+                        streamType: 'on-demand',
+                        logLevel: 'warn', // Show warnings
+                        crossOrigin: true,
+                        playsInline: true,
+                        title: 'Dynamic Video',
+                        poster: 'https://files.vidstack.io/sprite-fight/poster.webp',
+                        layout, // Use the configured layout
+                        tracks: [
+                            {
+                                src: 'https://files.vidstack.io/sprite-fight/subs/english.vtt',
+                                label: 'English',
+                                language: 'en-US',
+                                kind: 'subtitles',
+                                type: 'vtt',
+                                default: true,
+                            },
+                            {
+                                src: 'https://files.vidstack.io/sprite-fight/subs/spanish.vtt',
+                                label: 'Spanish',
+                                language: 'es-ES',
+                                kind: 'subtitles',
+                                type: 'vtt',
+                            },
+                            {
+                                src: 'https://files.vidstack.io/sprite-fight/chapters.vtt',
+                                language: 'en-US',
+                                kind: 'chapters',
+                                type: 'vtt',
+                                default: true,
+                            },
+                        ],
+                    });
+
+                    console.log('Player initialized successfully!');
+                } catch (error) {
+                    console.error('Error initializing Vidstack player:', error);
+                    document.getElementById('playerContainer').innerHTML =
+                        '<p style="color: red;">Failed to load the player.</p>';
+                }
+            })();
         }
-    }
-
-    // Display error messages
-    function displayError(message) {
-        errorMessage.innerText = message;
-    }
-
-    // On window load, initialize the player
-    window.onload = function () {
-        initializePlayer();
-    };
-</script>
-
+    </script>
 </body>
 </html>
