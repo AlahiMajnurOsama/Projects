@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Player</title>
+    <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
+    <script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
+    <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script> <!-- Plyr.js -->
+    <script type="module" src="https://cdn.vidstack.io/player.core"></script> <!-- Vidstack -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
+    <link rel="stylesheet" href="https://cdn.vidstack.io/player.css" />
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #000;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #videoContainer {
+            width: 100%;
+            height: 80vh;
+            margin-bottom: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+        .modal-content button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #444;
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+        .modal-content button:hover {
+            background-color: #666;
+        }
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="videoContainer"></div>
+
+<!-- Modal for Player Selection -->
+<div id="playerModal" class="modal">
+    <div class="modal-content">
+        <h2>Select Your Player</h2>
+        <button onclick="choosePlayer('jw')">JW Player</button>
+        <button onclick="choosePlayer('videojs')">Video.js Player</button>
+        <button onclick="choosePlayer('plyr')">Plyr Player</button>
+        <button onclick="choosePlayer('vidstack')">Vidstack Player</button>
+        <button onclick="smartChoose()">Smart Choose</button>
+    </div>
+</div>
+
+<!-- Error Message -->
+<div id="errorMessage" class="error-message"></div>
+
+<script>
+    let selectedPlayer = null;
+
+    // Show the player selection modal
+    function showPlayerModal() {
+        document.getElementById('playerModal').style.display = 'flex';
+    }
+
+    // Get URL parameters
+    function getQueryParam(key) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(key);
+    }
+
+    // Function to load the video based on the selected player
+    function loadPlayer(url) {
+        const container = document.getElementById('videoContainer');
+        container.innerHTML = ''; // Clear existing content
+
+        if (selectedPlayer === 'jw') {
+            jwplayer('videoContainer').setup({
+                file: url,
+                width: "100%",
+                height: "100%",
+                aspectratio: "16:9",
+                autostart: true
+            });
+        } else if (selectedPlayer === 'videojs') {
+            container.innerHTML = 
+              '<video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%">' +
+              '<source src="' + url + '" type="application/x-mpegURL"></video>';
+            videojs('#videoPlayer').play();
+        } else if (selectedPlayer === 'plyr') {
+            container.innerHTML = 
+              '<video controls crossorigin playsinline id="plyrPlayer" style="width: 100%; height: 100%;">' +
+              '<source src="' + url + '" type="application/x-mpegURL" /></video>';
+            const player = new Plyr('#plyrPlayer');
+            player.play();
+        } else if (selectedPlayer === 'vidstack') {
+            container.innerHTML = '<div id="vidstackPlayer"></div>';
+            import('https://cdn.vidstack.io/player.core').then(({ VidstackPlayer }) => {
+                VidstackPlayer.create({
+                    target: '#vidstackPlayer',
+                    title: 'IPTV Stream',
+                    src: url,
+                    poster: 'https://via.placeholder.com/1280x720?text=IPTV+Stream',
+                });
+            }).catch(() => displayError('Failed to load Vidstack Player.'));
+        } else {
+            displayError('Failed to load the player.');
+        }
+    }
+
+    // Manual player selection
+    function choosePlayer(player) {
+        selectedPlayer = player;
+        const channelUrl = getQueryParam('id');
+        if (channelUrl) {
+            loadPlayer(channelUrl);
+        } else {
+            displayError('No channel URL provided.');
+        }
+        document.getElementById('playerModal').style.display = 'none';
+    }
+
+    // Enhanced Smart Choose logic
+    function smartChoose() {
+        const channelUrl = getQueryParam('id');
+        if (channelUrl) {
+            selectedPlayer = 'vidstack'; // Default to Vidstack for modern features
+            loadPlayer(channelUrl);
+        } else {
+            displayError('No channel URL provided.');
+        }
+        document.getElementById('playerModal').style.display = 'none';
+    }
+
+    // Display error messages
+    function displayError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.innerText = message;
+    }
+
+    // On window load, show the player modal
+    window.onload = function() {
+        showPlayerModal();
+    }
+</script>
+
+</body>
+</html>
