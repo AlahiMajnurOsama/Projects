@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to M3U Playlist Maker</title>
+    <style>
+        /* Global Styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .container:hover { transform: translateY(-5px); }
+        h2 { margin-bottom: 20px; }
+        .input-group {
+            margin: 10px 0;
+            text-align: left;
+        }
+        .input-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 5px;
+            color: #333;
+            font-size: 1em;
+        }
+        button {
+            margin: 10px 5px;
+            background: #fff;
+            color: #2575fc;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+        button:hover { background: #e0e0e0; }
+        .output-section {
+            margin-top: 20px;
+            text-align: left;
+        }
+        pre {
+            background: #1e1e1e;
+            color: #00FF7F;
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+        #downloadBtn, #downloadM3U {
+            margin-top: 15px;
+            background: #00FF7F;
+            color: #1e1e1e;
+        }
+        #downloadBtn:hover, #downloadM3U:hover {
+            background: #32CD32;
+        }
+        .channel-list {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .channel-list p { margin: 5px 0; font-size: 0.95em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📺 JSON to M3U Playlist Maker</h2>
+
+    <!-- Input Fields -->
+    <div class="input-group">
+        <label>Channel Name:</label>
+        <input type="text" id="channelName" placeholder="Enter channel name" required>
+
+        <label>Channel Logo URL:</label>
+        <input type="text" id="channelLogo" placeholder="Enter logo URL" required>
+
+        <label>Channel URL (Stream Link):</label>
+        <input type="text" id="channelUrl" placeholder="Enter stream URL" required>
+
+        <label>Category Name:</label>
+        <input type="text" id="categoryName" placeholder="Enter category" required>
+
+        <label>Language:</label>
+        <input type="text" id="language" placeholder="Enter language (e.g., Bengali)" required>
+
+        <label>Country:</label>
+        <input type="text" id="country" placeholder="Enter country (e.g., Bangladesh)" required>
+    </div>
+
+    <!-- Action Buttons -->
+    <button onclick="addChannel()">➕ Add Channel</button>
+    <button onclick="generatePlaylist()">⚙️ Generate M3U</button>
+
+    <!-- Channel List -->
+    <div class="channel-list" id="channelList">
+        <strong>🛠️ Channel List:</strong>
+        <div id="listContent"></div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="output-section">
+        <h3>📜 Generated JSON:</h3>
+        <pre id="jsonOutput"></pre>
+
+        <h3>📺 M3U Playlist:</h3>
+        <pre id="m3uOutput"></pre>
+
+        <button id="downloadBtn" onclick="downloadJSON()">⬇️ Download JSON</button>
+        <button id="downloadM3U" onclick="downloadM3U()">⬇️ Download M3U</button>
+    </div>
+</div>
+
+<script>
+    // Channel Array
+    let channels = [];
+
+    // Add Channel to Array
+    function addChannel() {
+        const name = document.getElementById('channelName').value.trim();
+        const logo = document.getElementById('channelLogo').value.trim();
+        const url = document.getElementById('channelUrl').value.trim();
+        const category = document.getElementById('categoryName').value.trim();
+        const language = document.getElementById('language').value.trim();
+        const country = document.getElementById('country').value.trim();
+
+        if (!name || !logo || !url || !category || !language || !country) {
+            alert('Please fill in all fields!');
+            return;
+        }
+
+        const newChannel = {
+            channel_name: name,
+            channel_logo: logo,
+            channel_url: url,
+            category_name: category,
+            language: language,
+            country: country
+        };
+
+        channels.push(newChannel);
+        updateChannelList();
+        clearInputs();
+    }
+
+    // Update Channel List Display
+    function updateChannelList() {
+        const listContent = document.getElementById('listContent');
+        listContent.innerHTML = '';
+        channels.forEach((channel, index) => {
+            listContent.innerHTML += `<p><strong>${index + 1}.</strong> ${channel.channel_name} - [${channel.category_name}] - ${channel.language}/${channel.country}</p>`;
+        });
+    }
+
+    // Clear Input Fields
+    function clearInputs() {
+        document.getElementById('channelName').value = '';
+        document.getElementById('channelLogo').value = '';
+        document.getElementById('channelUrl').value = '';
+        document.getElementById('categoryName').value = '';
+        document.getElementById('language').value = '';
+        document.getElementById('country').value = '';
+    }
+
+    // Generate M3U Playlist
+    function generatePlaylist() {
+        if (channels.length === 0) {
+            alert('Add at least one channel before generating the playlist!');
+            return;
+        }
+
+        const jsonOutput = JSON.stringify(channels, null, 4);
+        document.getElementById('jsonOutput').innerText = jsonOutput;
+
+        let m3u = "#EXTM3U\n";
+        channels.forEach(channel => {
+            m3u += `#EXTINF:-1 tvg-logo="${channel.channel_logo}" group-title="${channel.category_name}",${channel.channel_name}\n${channel.channel_url}\n`;
+        });
+        document.getElementById('m3uOutput').innerText = m3u;
+    }
+
+    // Download JSON File
+    function downloadJSON() {
+        if (channels.length === 0) {
+            alert('Nothing to download. Add some channels first!');
+            return;
+        }
+        const jsonContent = JSON.stringify(channels, null, 4);
+        const blob = new Blob([jsonContent], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'playlist.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Download M3U File
+    function downloadM3U() {
+        if (channels.length === 0) {
+            alert('Nothing to download. Add some channels first!');
+            return;
+        }
+        let m3uContent = "#EXTM3U\n";
+        channels.forEach(channel => {
+            m3uContent += `#EXTINF:-1 tvg-logo="${channel.channel_logo}" group-title="${channel.category_name}",${channel.channel_name}\n${channel.channel_url}\n`;
+        });
+        const blob = new Blob([m3uContent], { type: 'audio/x-mpegurl' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'playlist.m3u';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+</body>
+</html>
