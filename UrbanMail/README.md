@@ -1,9 +1,92 @@
-This project was developed as a means to explore and understand temporary email services—specifically, how they function and the technologies that power them. My goal was to deepen my knowledge on this subject, and to achieve that, I created this project as a series of practical examples showcasing what I learned.
 
-In the first version of the project (v1), I utilized the 1secmail API, which is an open-source solution, to create a personalized environment where users could receive messages. Within this framework, I experimented with a new feature called the admin panel, which stored a list of all generated emails. However, I encountered a limitation: the project was built with only HTML, meaning it didn't have a backend database to preserve email data. Consequently, whenever a user clicked on the option to generate a new email, it created a random email address, but with no means to access that email again in the future.
 
-As the 1secmail service transitioned to a paid model, I was effectively unable to continue with v1, leading me to rethink my approach. Recognizing the limitations of the previous iteration, especially the lack of future access to old emails, I decided to advance to version 2 (v2) of the project. I concluded that what was needed was an application that would not only generate temporary emails but would also securely provide users with the passwords needed to access those emails later.
 
-After conducting thorough research, I stumbled upon an interesting API called mail.tm. This service stood out because it offers not only random email addresses but also associated passwords, allowing users to retain future access to their temporary emails. In v2, I integrated the mail.tm API into my application, which maintains the concept of temporary emails while enhancing the user experience by enabling ongoing access.
+---
 
-The result is essentially a similar concept to other temporary email services, but with a significant improvement—users can now revisit their generated email boxes with the credentials provided. This iteration not only fulfills the original intent of enabling users to receive messages but also empowers them with the ability to access those messages on their own terms, making it a more practical and user-friendly tool for managing temporary communications.
+TempMail Service – Smarter Temporary Email 📬⚙️
+
+This project was created to explore how temporary email services work, diving deep into the APIs and architectures behind them. What started as a curiosity-driven idea turned into a two-phase project that reflects my growth in backend and API integration skills.
+
+
+---
+
+Why This Project?
+
+I wanted to understand:
+
+How temporary emails are generated
+
+What technologies power them
+
+How to create a secure and user-accessible temp mail service
+
+
+To do this, I built two versions of the project — each with its own lessons and improvements.
+
+
+---
+
+Version 1 (v1): The Beginning 🧪
+
+Used 1secmail API (open source)
+
+Allowed users to generate random emails
+
+Added an admin panel to track generated emails
+
+Limitations: Built in pure HTML, no backend = no data persistence
+
+Result: Emails were lost after generation, and 1secmail eventually became a paid service
+
+
+
+---
+
+Version 2 (v2): The Evolution 🚀
+
+After identifying v1’s drawbacks, I discovered the mail.tm API, which changed the game:
+
+Supports both email + password generation
+
+Enables users to revisit inboxes securely
+
+Offers a better, more user-friendly experience
+
+Solves the biggest challenge: persistent access to temp mailboxes
+
+
+
+---
+
+Project Highlights
+
+Generate disposable email addresses instantly
+
+Secure access with auto-generated passwords
+
+Access inbox messages on your own terms
+
+Simple UI but powerful under the hood
+
+
+> From one-time access to full control — this project reflects how tech can evolve with thoughtful iteration.
+
+
+
+
+---
+
+Tech Stack 🛠️
+
+Technology	Purpose
+
+HTML	Structure & interface (v1 & v2)
+CSS	Styling & responsiveness
+JavaScript	API integration & dynamic interactions
+1secmail API	Email generation (v1 - now deprecated)
+mail.tm API	Email + password system with inbox access (v2)
+
+
+
+---
+
