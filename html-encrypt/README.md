@@ -1,0 +1,5 @@
+This project is fundamentally focused on enhancing security measures. The primary objective behind its development is to create a robust framework that leverages HTML encryption techniques to ensure the source code remains concealed from individuals who lack technical expertise. 
+
+I designed this tool to function effectively without the need for an internet connection, allowing users to maintain the security of their HTML files in a more controlled environment. By implementing these security features, I aimed to provide an additional layer of protection that safeguards sensitive information and intellectual property embedded within the code. 
+
+This approach not only addresses the immediate security concerns surrounding source code exposure but also empowers users to work confidently with their HTML files, knowing they have taken proactive steps to secure their work against unauthorized access and exploitation. The goal is to make web development more secure and accessible, ensuring that valuable content and code remain protected from prying eyes.
