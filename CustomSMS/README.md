@@ -1,7 +1,39 @@
-This project was designed to develop a custom SMS solution that operates through an Application Programming Interface (API). However, it is important to note that the project has now expired and is no longer active.
 
-The solution was intended to integrate with several applications, including Badhan, which serves as a messaging platform for communicating with users, as well as Hisab Express, which functions as a transaction record management tool. Additionally, the project aimed to incorporate the Robi Express system for delivering One-Time Passwords (OTPs). By leveraging these OTP messaging capabilities, the solution was set to facilitate the sending of customized SMS messages without incurring any costs. 
+---
 
-While the technological framework and potential applications were promising, it is crucial to point out that this approach also illuminated several significant vulnerabilities within the systems involved. These vulnerabilities could pose ethical concerns and risks not only to the parties managing these systems but also to the end users.
+Custom SMS API Solution ❌📱
 
-Upon careful consideration of these ethical implications and the potential negative consequences of pursuing this project, we ultimately decided to halt any further developments. The decision to stop the project reflects our commitment to responsible practices and our dedication to upholding ethical standards in all of our initiatives.
+This project was my attempt to build a custom SMS solution powered by API integration — crafted with the goal of improving communication across platforms in a seamless, cost-free way.
+
+What It Aimed To Do
+
+The system was designed to work with several platforms:
+
+Badhan – for sending user notifications
+
+Hisab Express – to log and manage transactions
+
+Robi Express – to deliver One-Time Passwords (OTPs)
+
+
+By combining these tools, the solution could send custom SMS messages efficiently and without additional cost — a concept that held a lot of potential.
+
+
+---
+
+Why It Was Discontinued
+
+Despite the technical promise, deeper development revealed critical vulnerabilities — some of which raised serious ethical concerns. These issues could have impacted not only the system operators but also the privacy and safety of end users.
+
+After thoughtful reflection, I made the tough but responsible decision to shut down this project. As a developer, I believe in building tools that respect privacy, security, and ethical integrity — even if that means walking away from something I worked hard on.
+
+
+---
+
+> Sometimes, knowing when to stop is part of progress.
+This project remains archived as a reminder of that principle.
+
+
+
+
+---
