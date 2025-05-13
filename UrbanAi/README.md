@@ -1,0 +1,5 @@
+Urban Ai is an innovative project that leverages an API-based architecture to create a unique user experience. The main driving force behind the development of this application was the integration of the ChatGPT API, which adds advanced conversational capabilities to the app.
+
+In designing Urban Ai, I ensured that it carries a personal touch, optimizing its visual elements to create an aesthetically pleasing interface that enhances user engagement. Behind the scenes, the project serves as a valuable learning experience, providing insights into how artificial intelligence operates through APIs. It allowed me to explore the intricacies of building AI chatbots and understanding their functionalities within a web environment. 
+
+As a straightforward HTML project, Urban Ai was not only an exploration of technology but also a means to hone my skills in web development and machine learning. However, the time has come for this project to reach the end of its life cycle. Although Urban Ai will no longer be updated, it has served its purpose as a foundational learning tool and a demonstration of what can be achieved through API integration and AI technology.
